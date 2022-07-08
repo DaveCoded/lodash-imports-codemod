@@ -1,6 +1,8 @@
 /*
     NOTES:
      - Does not support CJS imports, i.e. const map = require('lodash/map');
+     - Comments at the top of the file are preserved
+     - Comments above other lodash imports 
 
     CASES:
     0.  ✅ Leave correct imports as they are

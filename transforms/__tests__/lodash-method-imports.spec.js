@@ -4,7 +4,7 @@ jest.autoMockOff();
 const { defineTest } = require("jscodeshift/dist/testUtils");
 
 const name = "lodash-method-imports";
-const fixtures = ["default", "functional-default"];
+const fixtures = ["default", "functional-default", "no-transform"];
 
 describe(name, () => {
   fixtures.forEach((test) =>

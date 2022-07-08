@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash/fp";
+import _ from "random-lib";
 import getUserFromDB from "./getUserFromDB";
 
 function doSomething(user) {

@@ -37,59 +37,55 @@ module.exports = function transform(file, api) {
   const root = j(file.source);
   let changed = false;
 
-  const didTransform =
-    root
-      .find(j.ImportDeclaration, isLodashImport)
-      .forEach((path) => {
-        const { node } = path;
-        if (isCorrectMethodImport(node)) return;
-        changed = true;
+  root.find(j.ImportDeclaration, isLodashImport).forEach((path) => {
+    const { node } = path;
+    if (isCorrectMethodImport(node)) return;
+    changed = true;
 
-        const { specifiers } = node;
+    const { specifiers } = node;
 
-        specifiers.forEach((specifier) => {
-          if (specifier.type === "ImportDefaultSpecifier") {
-            const { name } = specifier.local;
-            const methodsUsed = new Set();
-            const isLodashExpression = getLodashExpressionFunction(name);
+    specifiers.forEach((specifier) => {
+      if (specifier.type === "ImportDefaultSpecifier") {
+        const { name } = specifier.local;
+        const methodsUsed = new Set();
+        const isLodashExpression = getLodashExpressionFunction(name);
 
-            /**
-             * Replace all lodash call expressions in the source's body
-             * _.isObject(myObj) => isObject(myObj)
-             * Works for normal and fp
-             */
-            root
-              .find(j.CallExpression, isLodashExpression)
-              .forEach((p) => methodsUsed.add(p.node.callee.property.name)) // Collect methods used
-              .replaceWith((p) => replaceExpression(p, j));
+        /**
+         * Replace all lodash call expressions in the source's body
+         * _.isObject(myObj) => isObject(myObj)
+         * Works for normal and fp
+         */
+        root
+          .find(j.CallExpression, isLodashExpression)
+          .forEach((p) => methodsUsed.add(p.node.callee.property.name)) // Collect methods used
+          .replaceWith((p) => replaceExpression(p, j));
 
-            // Add a new import above this node for each lodash method used in body of code (works for normal and fp)
-            methodsUsed.forEach((method) => {
-              // For the first one, if there are no named imports, add comments to the new node
-              const newImport = j.importDeclaration(
-                [j.importDefaultSpecifier(j.identifier(method))],
-                j.literal(`${node.source.value}/${method}`)
-              );
+        // Add a new import above this node for each lodash method used in body of code (works for normal and fp)
+        methodsUsed.forEach((method) => {
+          // For the first one, if there are no named imports, add comments to the new node
+          const newImport = j.importDeclaration(
+            [j.importDefaultSpecifier(j.identifier(method))],
+            j.literal(`${node.source.value}/${method}`)
+          );
 
-              j(path).insertBefore(newImport);
-            });
-          } else {
-            // Is named import
-            const fileName = specifier.imported.name;
-            const importName = specifier.local.name;
-
-            const newImport = j.importDeclaration(
-              [j.importDefaultSpecifier(j.identifier(importName))],
-              j.stringLiteral(`${node.source.value}/${fileName}`)
-            );
-
-            j(path).insertBefore(newImport);
-          }
+          j(path).insertBefore(newImport);
         });
+      } else {
+        // Is named import
+        const fileName = specifier.imported.name;
+        const importName = specifier.local.name;
 
-        j(path).remove();
-      })
-      .size() > 0;
+        const newImport = j.importDeclaration(
+          [j.importDefaultSpecifier(j.identifier(importName))],
+          j.stringLiteral(`${node.source.value}/${fileName}`)
+        );
 
-  return didTransform && changed ? root.toSource() : null;
+        j(path).insertBefore(newImport);
+      }
+    });
+
+    j(path).remove();
+  });
+
+  return changed ? root.toSource() : null;
 };

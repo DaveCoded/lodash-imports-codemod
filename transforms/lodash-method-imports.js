@@ -17,6 +17,7 @@
        b) Do the same even if there's a space between comments and import!!
        c) Preserve comments above other lodash imports(?)
     12. Convert project to TS and try .tsx test fixtures
+    13. TODO is spec file
 
     BONUS:
     a) import * as _ from 'lodash' => import all

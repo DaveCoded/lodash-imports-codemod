@@ -1,23 +1,24 @@
 /*
-    CASES:
+    NOTES:
+     - Does not support CJS imports, i.e. const map = require('lodash/map');
 
-    0. ✅ Leave correct imports as they are
-    1. ✅ import _ from 'lodash' => normal default import
-    2. ✅ import _ from 'lodash/fp' => functional default import
-    3. ✅ import { filter } from 'lodash' => normal named import
-    4. ✅ import { filter } from 'lodash/fp' => functional named import
-    5. ✅ import { map as lodashMap } from 'lodash' => normal named import with alias
-    6. ✅ import { map as lodashMap } from 'lodash/fp' => functional named import with alias
-    7. ✅ import _, { map } from 'lodash' => mix of default and named imports
-    8. ✅ import _, { map } from 'lodash/fp' => mix of default and named functional imports
-    9. ✅ Only call toSource when source has changed
-    10. Add missing test cases
+    CASES:
+    0.  ✅ Leave correct imports as they are
+    1.  ✅ import _ from 'lodash' => normal default import
+    2.  ✅ import _ from 'lodash/fp' => functional default import
+    3.  ✅ import { filter } from 'lodash' => normal named import
+    4.  ✅ import { filter } from 'lodash/fp' => functional named import
+    5.  ✅ import { map as lodashMap } from 'lodash' => normal named import with alias
+    6.  ✅ import { map as lodashMap } from 'lodash/fp' => functional named import with alias
+    7.  ✅ import _, { map } from 'lodash' => mix of default and named imports
+    8.  ✅ import _, { map } from 'lodash/fp' => mix of default and named functional imports
+    9.  ✅ Only call toSource when source has changed
+    10. ✅ Add missing test cases
     11. PRESERVE COMMENTS
-       a) Preserve comments at the top of the file if they are above a lodash import
-       b) Do the same even if there's a space between comments and import!!
-       c) Preserve comments above other lodash imports(?)
+       a) ✅ Preserve comments at the top of the file if they are above a lodash import
+       b) ✅ Do the same even if there's a space between comments and import!!
     12. Convert project to TS and try .tsx test fixtures
-    13. TODO is spec file
+    13. TODO in spec file
 
     BONUS:
     a) import * as _ from 'lodash' => import all

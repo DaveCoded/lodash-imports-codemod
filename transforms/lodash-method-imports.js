@@ -43,9 +43,11 @@ module.exports = function transform(file, api) {
 
   root.find(j.ImportDeclaration, isLodashImport).forEach((path) => {
     const { node } = path;
-    if (isCorrectMethodImport(node)) return;
-    changed = true;
 
+    if (isCorrectMethodImport(node)) return;
+
+    // If import is not already "correct", it will change
+    changed = true;
     const { specifiers } = node;
 
     specifiers.forEach((specifier) => {
@@ -54,19 +56,14 @@ module.exports = function transform(file, api) {
         const methodsUsed = new Set();
         const isLodashExpression = getLodashExpressionFunction(name);
 
-        /**
-         * Replace all lodash call expressions in the source's body
-         * _.isObject(myObj) => isObject(myObj)
-         * Works for normal and fp
-         */
+        // Replace all calls to methods on the default export; e.g. _.map(args) => map(args)
         root
           .find(j.CallExpression, isLodashExpression)
           .forEach((p) => methodsUsed.add(p.node.callee.property.name)) // Collect methods used
           .replaceWith((p) => replaceExpression(p, j));
 
-        // Add a new import above this node for each lodash method used in body of code (works for normal and fp)
+        // Add a new import above this node for each lodash method used in body of code
         methodsUsed.forEach((method) => {
-          // For the first one, if there are no named imports, add comments to the new node
           const newImport = j.importDeclaration(
             [j.importDefaultSpecifier(j.identifier(method))],
             j.literal(`${node.source.value}/${method}`)

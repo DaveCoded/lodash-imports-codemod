@@ -11,11 +11,12 @@
     7. ✅ import _, { map } from 'lodash' => mix of default and named imports
     8. ✅ import _, { map } from 'lodash/fp' => mix of default and named functional imports
     9. ✅ Only call toSource when source has changed
-    10. PRESERVE COMMENTS
+    10. Add missing test cases
+    11. PRESERVE COMMENTS
        a) Preserve comments at the top of the file if they are above a lodash import
        b) Do the same even if there's a space between comments and import!!
        c) Preserve comments above other lodash imports(?)
-    11. Convert project to TS and try .tsx test fixtures
+    12. Convert project to TS and try .tsx test fixtures
 
     BONUS:
     a) import * as _ from 'lodash' => import all
@@ -89,8 +90,6 @@ module.exports = function transform(file, api) {
         j(path).remove();
       })
       .size() > 0;
-
-  console.log({ didTransform });
 
   return didTransform && changed ? root.toSource() : null;
 };

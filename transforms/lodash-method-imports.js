@@ -34,6 +34,7 @@ const {
 module.exports = function transform(file, api) {
   const j = api.jscodeshift;
   const root = j(file.source);
+  let changed = false;
 
   const didTransform =
     root
@@ -41,6 +42,7 @@ module.exports = function transform(file, api) {
       .forEach((path) => {
         const { node } = path;
         if (isCorrectMethodImport(node)) return;
+        changed = true;
 
         const { specifiers } = node;
 
@@ -90,5 +92,5 @@ module.exports = function transform(file, api) {
 
   console.log({ didTransform });
 
-  return didTransform ? root.toSource() : null;
+  return didTransform && changed ? root.toSource() : null;
 };

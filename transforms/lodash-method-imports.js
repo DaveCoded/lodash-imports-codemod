@@ -1,45 +1,45 @@
 /*
-    NOTES:
-     - Does not support CJS imports, i.e. const map = require('lodash/map');
-     - Comments at the top of the file are preserved
-     - Comments above other lodash imports 
-
-    CASES:
-    0.  ✅ Leave correct imports as they are
-    1.  ✅ import _ from 'lodash' => normal default import
-    2.  ✅ import _ from 'lodash/fp' => functional default import
-    3.  ✅ import { filter } from 'lodash' => normal named import
-    4.  ✅ import { filter } from 'lodash/fp' => functional named import
-    5.  ✅ import { map as lodashMap } from 'lodash' => normal named import with alias
-    6.  ✅ import { map as lodashMap } from 'lodash/fp' => functional named import with alias
-    7.  ✅ import _, { map } from 'lodash' => mix of default and named imports
-    8.  ✅ import _, { map } from 'lodash/fp' => mix of default and named functional imports
-    9.  ✅ Only call toSource when source has changed
-    10. ✅ Add missing test cases
-    11. ✅ PRESERVE COMMENTS
-       a) ✅ Preserve comments at the top of the file if they are above a lodash import
-       b) ✅ Do the same even if there's a space between comments and import!!
-    12. Convert project to TS and try .tsx test fixtures
-    13. ✅ TODO in spec file
-
-    BONUS:
-    a) import * as _ from 'lodash' => import all
-    b) import * as _ from 'lodash/fp' => import all functional
-    c) import * as camelCase from 'lodash/camelcase' => import all from method file
-    d) import * as camelCase from 'lodash/fp/camelCase' => import all functional from method file
+========================================================================
+====================          UTILS          ===========================
+========================================================================
 */
+const isLodashImport = (node) => node.source.value.startsWith("lodash");
 
-const {
-  isLodashImport,
-  isCorrectMethodImport,
-  getLodashExpressionFunction,
-  replaceExpression,
-} = require("../utils");
+const isCorrectMethodImport = (node) => {
+  const { specifiers, source } = node;
+  const specifierName = specifiers[0].local.name;
+  const { value } = source;
 
+  return (
+    specifiers.length === 1 &&
+    specifiers[0].type === "ImportDefaultSpecifier" &&
+    [`lodash/${specifierName}`, `lodash/fp/${specifierName}`].includes(value)
+  );
+};
+
+const replaceExpression = (path, j) =>
+  j.callExpression(
+    j.identifier(path.node.callee.property.name),
+    path.node.arguments
+  );
+
+const getLodashExpressionFunction = (name) => (expressionNode) =>
+  expressionNode.callee.type === "MemberExpression" &&
+  expressionNode.callee.object &&
+  expressionNode.callee.object.name === name;
+
+/*
+========================================================================
+====================        TRANSFORM        ===========================
+========================================================================
+*/
 module.exports = function transform(file, api) {
   const j = api.jscodeshift;
   const root = j(file.source);
   let changed = false;
+
+  const firstNode = () => root.find(j.Program).get("body", 0);
+  const comment = firstNode().node.leadingComments;
 
   root.find(j.ImportDeclaration, isLodashImport).forEach((path) => {
     const { node } = path;
@@ -86,6 +86,7 @@ module.exports = function transform(file, api) {
     });
 
     j(path).remove();
+    firstNode().node.comments = comment;
   });
 
   return changed ? root.toSource() : null;

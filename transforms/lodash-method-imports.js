@@ -51,7 +51,11 @@ module.exports = function transform(file, api) {
     const { specifiers } = node;
 
     specifiers.forEach((specifier) => {
-      if (specifier.type === "ImportDefaultSpecifier") {
+      if (
+        ["ImportDefaultSpecifier", "ImportNamespaceSpecifier"].includes(
+          specifier.type
+        )
+      ) {
         const { name } = specifier.local;
         const methodsUsed = new Set();
         const isLodashExpression = getLodashExpressionFunction(name);

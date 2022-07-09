@@ -2,18 +2,18 @@ A jscodeshift codemod for transforming various lodash imports to single method i
 
 ## Contents
 
-1. [Cases covered](cases-covered)
-2. [Not supported](not-supported)
-3. [Known issues](known-issues)
+1. [Cases covered](#cases-covered)
+2. [Not supported](#not-supported)
+3. [Known issues](#known-issues)
 
 ## Cases covered
 
-1. [Default imports](default-import) from `lodash`. The identifier can be given any name — the examples just use `_` as a convention.
-2. [Named imports](named-imports) from `lodash`. Any number of named imports are handled.
-3. [Import aliases](named-import-alias) for named imports. Also handled for multiple named imports, multiple aliases and mixture of named and default imports.
-4. [Mixture of named and default imports](mixed-default-and-named-imports)
-5. [Import all as object](import-all-as-object) using the asterisk (\*) syntax
-6. [Imports from lodash/fp](lodash/fp-imports)
+1. [Default imports](#default-import) from `lodash`. The identifier can be given any name — the examples just use `_` as a convention.
+2. [Named imports](#named-imports) from `lodash`. Any number of named imports are handled.
+3. [Import aliases](#named-import-alias) for named imports. Also handled for multiple named imports, multiple aliases and mixture of named and default imports.
+4. [Mixture of named and default imports](#mixed-default-and-named-imports)
+5. [Import all as object](#import-all-as-object) using the asterisk (\*) syntax
+6. [Imports from lodash/fp](#lodash/fp-imports)
 
 ### Default import
 

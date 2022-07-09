@@ -13,7 +13,7 @@ A jscodeshift codemod for transforming various lodash imports to single method i
 3. [Import aliases](#named-import-alias) for named imports. Also handled for multiple named imports, multiple aliases and mixture of named and default imports.
 4. [Mixture of named and default imports](#mixed-default-and-named-imports)
 5. [Import all as object](#import-all-as-object) using the asterisk (\*) syntax
-6. [Imports from lodash/fp](#lodash/fp-imports)
+6. [Imports from lodash/fp](#lodashfp-imports)
 
 ### Default import
 

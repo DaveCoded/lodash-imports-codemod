@@ -5,7 +5,8 @@
   "main": "transform.js",
   "scripts": {
     "test": "jest",
-    "start": "jscodeshift"
+    "codemod": "jscodeshift -t transforms/lodash-method-imports.js",
+    "start": "npm run codemod"
   },
   "keywords": [],
   "author": "Dave Bernhard",

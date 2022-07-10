@@ -2,9 +2,18 @@ A jscodeshift codemod for transforming various lodash imports to single method i
 
 ## Contents
 
-1. [Cases covered](#cases-covered)
-2. [Not supported](#not-supported)
-3. [Known issues](#known-issues)
+1. [Usage](#usage)
+2. [Cases covered](#cases-covered)
+3. [Not supported](#not-supported)
+4. [Known issues](#known-issues)
+
+## Usage
+
+`npm start` will run jscodeshift with the transform. You can then pass any optional parameters (such as a parser) and a path to the directory of files you want to transform.
+
+```shell
+npm start path/to/files --parser=tsx
+```
 
 ## Cases covered
 

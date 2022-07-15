@@ -95,3 +95,5 @@ module.exports = function transform(file, api) {
 
   return changed ? root.toSource() : null;
 };
+
+module.exports.parser = "tsx";

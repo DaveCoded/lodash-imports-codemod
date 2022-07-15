@@ -12,7 +12,7 @@ A jscodeshift codemod for transforming various lodash imports to single method i
 `npm start` will run jscodeshift with the transform. You can then pass any optional parameters (such as a parser) and a path to the directory of files you want to transform.
 
 ```shell
-npm start path/to/files --parser=tsx
+npm start path/to/files
 ```
 
 ## Cases covered
